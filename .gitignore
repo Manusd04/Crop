@@ -1,0 +1,23 @@
+# Environment variables
+.env
+
+# Local databases
+*.duckdb
+*.db
+
+# Compiled Python files
+__pycache__/
+*.pyc
+
+# macOS metadata
+.DS_Store
+
+# Logs
+*.log
+backend/app/logs/
+
+# Jupyter notebooks checkpoints (if any)
+.ipynb_checkpoints/
+
+# Node modules (if frontend grows later)
+frontend/node_modules/
