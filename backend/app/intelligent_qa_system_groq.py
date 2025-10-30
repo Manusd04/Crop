@@ -59,17 +59,36 @@ def is_complex_query(question: str) -> bool:
 # SQL UTILITIES
 # -----------------------------------------------------------------------------
 def clean_sql(query: str) -> str:
-    """Extract and clean SQL query from LLM response"""
+    """Extract, sanitize, and normalize SQL query for DuckDB compatibility"""
+    import re
+
+    # 🧹 Step 1: Basic cleanup (your original logic)
     query = query.strip()
     query = re.sub(r'^```sql\s*', '', query, flags=re.IGNORECASE)
     query = re.sub(r'^```|\s*```$', '', query)
     query = query.strip()
+    
     if re.search(r'^[a-z_]+\s+AS\s+\(', query, re.IGNORECASE) and not query.upper().startswith('WITH'):
         query = 'WITH ' + query
+    
     match = re.search(r'((?:WITH|SELECT)\s+.*)', query, re.IGNORECASE | re.DOTALL)
     if match:
         query = match.group(1)
+
+    # 🧠 Step 2: Replace PostgreSQL-style functions with DuckDB equivalents
+    replacements = {
+        r"\bTO_DATE\s*\(": "STRPTIME(",
+        r"\bto_date\s*\(": "STRPTIME(",
+        r"'YYYY-MM-DD'": "'%Y-%m-%d'",
+        r"ILIKE": "LIKE",  # DuckDB doesn’t have ILIKE (case-insensitive LIKE)
+        r"::DATE": "",      # remove Postgres-style type casting
+    }
+    for pattern, replacement in replacements.items():
+        query = re.sub(pattern, replacement, query)
+
+    # 🧩 Step 3: Final cleanup
     return query.rstrip(';').strip()
+
 
 def execute_sql(sql: str):
     """Execute SQL query and return results"""
