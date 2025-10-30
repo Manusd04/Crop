@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: agriclimate-qa
+    env: python
+
+    buildCommand: pip install -r requirements.txt
+
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false  # you'll add this manually from the Render dashboard
+      - key: DB_PATH
+        value: /opt/render/project/src/data/processed/agri_climate_db.duckdb
+      - key: PYTHONPATH
+        value: /opt/render/project/src

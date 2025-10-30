@@ -1,0 +1,189 @@
+[
+  {
+    "timestamp": "2025-10-29T14:16:45.733666",
+    "question": "Which district had the highest wheat yield in Uttar Pradesh in 2019?",
+    "sql_raw": "SELECT district FROM crop_production_raw WHERE state = 'Uttar Pradesh' AND crop = 'Wheat' AND crop_year = 2019 ORDER BY yield DESC LIMIT 1",
+    "sql_clean": "SELECT district FROM crop_production_raw WHERE state = 'Uttar Pradesh' AND crop = 'Wheat' AND crop_year = 2019 ORDER BY yield DESC LIMIT 1;",
+    "tables_referenced": [
+      "crop_production_raw"
+    ],
+    "row_count": 1,
+    "nl_answer": "According to the crop_production_raw table, the district with the highest wheat yield in Uttar Pradesh in 2019 was Shamli. This information is based on data from the crop_production_raw table, which tracks crop production across different states and districts. The data suggests that Shamli had the highest yield among all districts in Uttar Pradesh for wheat in 2019."
+  },
+  {
+    "timestamp": "2025-10-29T14:16:59.508157",
+    "question": "Compare the rice production between West Bengal and Punjab over the last 5 years.",
+    "sql_raw": "SELECT state, SUM(production) as total_production \nFROM crop_production_raw \nWHERE crop = 'rice' AND state IN ('West Bengal', 'Punjab') AND crop_year > (SELECT MAX(crop_year) - 5 FROM crop_production_raw) \nGROUP BY state;",
+    "sql_clean": "SELECT state, SUM(production) as total_production \nFROM crop_production_raw \nWHERE crop = 'rice' AND state IN ('West Bengal', 'Punjab') AND crop_year > (SELECT MAX(crop_year) - 5 FROM crop_production_raw) \nGROUP BY state;",
+    "tables_referenced": [
+      "crop_production_raw",
+      "crop_production_raw)"
+    ],
+    "error": "Referenced table(s) not found in DB: ['crop_production_raw)']. Available tables: ['crop_production_raw', 'groundwater_long', 'groundwater_raw', 'market_prices', 'rainfall_raw', 'temperature']"
+  },
+  {
+    "timestamp": "2025-10-29T14:17:24.944803",
+    "question": "What is the average yield of sugarcane in Maharashtra during the Rabi season?",
+    "sql_raw": "SELECT AVG(yield) FROM crop_production_raw WHERE crop = 'Sugarcane' AND state = 'Maharashtra' AND season = 'Rabi'",
+    "sql_clean": "SELECT AVG(yield) FROM crop_production_raw WHERE crop = 'Sugarcane' AND state = 'Maharashtra' AND season = 'Rabi';",
+    "tables_referenced": [
+      "crop_production_raw"
+    ],
+    "row_count": 1,
+    "nl_answer": "The average yield of sugarcane in Maharashtra during the Rabi season is not available in the provided data from the `crop_production_raw` table. This is indicated by the empty result set. It is possible that sugarcane is not typically grown during the Rabi season in Maharashtra, or there may be missing data in the `crop_production_raw` table."
+  },
+  {
+    "timestamp": "2025-10-29T14:17:40.116193",
+    "question": "What percentage of land in Rajasthan is under irrigated area?",
+    "sql_raw": "SELECT SUM(CASE WHEN type = 'Irrigated' THEN area ELSE 0 END) * 100 / SUM(area) FROM crop_production_raw WHERE state = 'Rajasthan'",
+    "sql_clean": "SELECT SUM(CASE WHEN type = 'Irrigated' THEN area ELSE 0 END) * 100 / SUM(area) FROM crop_production_raw WHERE state = 'Rajasthan';",
+    "tables_referenced": [
+      "crop_production_raw"
+    ],
+    "error": "Binder Error: Referenced column \"type\" not found in FROM clause!\nCandidate bindings: \"state\", \"yield\", \"crop_year\", \"crop\", \"area\"\n\nLINE 1: SELECT SUM(CASE WHEN type = 'Irrigated' THEN area ELSE 0 END) * 100 / SUM(area...\n                             ^"
+  },
+  {
+    "timestamp": "2025-10-29T14:30:39.209790",
+    "question": "Compare average rainfall between Bihar and Odisha over the last decade.",
+    "raw_sql": "```sql\nSELECT \n    district, \n    AVG(day_actual_mm_) AS average_rainfall\nFROM \n    rainfall_raw\nWHERE \n    district IN ('Bihar', 'Odisha')\nGROUP BY \n    district\n```",
+    "sql_clean": "SELECT \n    district, \n    AVG(day_actual_mm_) AS average_rainfall\nFROM \n    rainfall_raw\nWHERE \n    district IN ('Bihar', 'Odisha')\nGROUP BY \n    district;",
+    "tables_used": [
+      "rainfall_raw"
+    ],
+    "row_count": 0,
+    "nl_answer": "There is no data available to compare the average rainfall between Bihar and Odisha. The query on the 'rainfall_raw' table did not return any results, suggesting that the table may be empty or the specified districts may not be present. Further investigation into the 'rainfall_raw' table is needed to determine the cause of the empty result set.",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-29T14:30:59.088536",
+    "question": "Which states have shown the highest increase in cultivated area since 2015?",
+    "raw_sql": "```sql\nSELECT state, MAX(area) - MIN(area) AS increase_in_area\nFROM crop_production_raw\nWHERE crop_year >= 2015\nGROUP BY state\nORDER BY increase_in_area DESC\nLIMIT 1;\n```",
+    "sql_clean": "SELECT state, MAX(area) - MIN(area) AS increase_in_area\nFROM crop_production_raw\nWHERE crop_year >= 2015\nGROUP BY state\nORDER BY increase_in_area DESC\nLIMIT 1;",
+    "tables_used": [
+      "crop_production_raw"
+    ],
+    "row_count": 1,
+    "nl_answer": "Rajasthan has shown the highest increase in cultivated area since 2015, with a total increase of over 1 million. This is based on data from the 'crop_production_raw' table, which tracks crop production trends across different states. The significant increase in Rajasthan's cultivated area makes it the leading state in this regard.",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-29T14:31:13.418125",
+    "question": "Compare average rainfall between Bihar and Odisha over the last decade.",
+    "raw_sql": "```sql\nSELECT \n    district, \n    AVG(day_actual_mm_) AS average_rainfall\nFROM \n    rainfall_raw\nWHERE \n    district IN ('Bihar', 'Odisha')\nGROUP BY \n    district\n```",
+    "sql_clean": "SELECT \n    district, \n    AVG(day_actual_mm_) AS average_rainfall\nFROM \n    rainfall_raw\nWHERE \n    district IN ('Bihar', 'Odisha')\nGROUP BY \n    district;",
+    "tables_used": [
+      "rainfall_raw"
+    ],
+    "row_count": 0,
+    "nl_answer": "There is no data available to compare the average rainfall between Bihar and Odisha. The query on the 'rainfall_raw' table did not return any results, indicating a lack of data for these districts. Further analysis cannot be performed without additional data in the 'rainfall_raw' table.",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-29T14:50:43.740048",
+    "question": "How did rainfall in Kerala affect paddy yield in 2021?",
+    "raw_sql": "```sql\nSELECT \n    SUM(CASE WHEN state = 'Kerala' AND year = 2021 AND parameter = 'rainfall' THEN value END) AS rainfall,\n    SUM(CASE WHEN state = 'Kerala' AND year = 2021 AND parameter = 'paddy yield' THEN value END) AS paddy_yield\nFROM \n    your_table;\n```",
+    "sql_clean": "SELECT \n    SUM(CASE WHEN state = 'Kerala' AND year = 2021 AND parameter = 'rainfall' THEN value END) AS rainfall,\n    SUM(CASE WHEN state = 'Kerala' AND year = 2021 AND parameter = 'paddy yield' THEN value END) AS paddy_yield\nFROM \n    your_table;",
+    "validation_error": "Referenced missing table(s): ['your_table']. Available: []"
+  },
+  {
+    "timestamp": "2025-10-29T14:51:13.422929",
+    "question": "Show the correlation between annual rainfall and crop yield for groundnut in Gujarat.",
+    "raw_sql": "```sql\nSELECT CORR(annual_rainfall, crop_yield) \nFROM groundnut \nWHERE state = 'Gujarat';\n```",
+    "sql_clean": "SELECT CORR(annual_rainfall, crop_yield) \nFROM groundnut \nWHERE state = 'Gujarat';",
+    "validation_error": "Referenced missing table(s): ['groundnut']. Available: []"
+  },
+  {
+    "timestamp": "2025-10-29T14:51:33.009989",
+    "question": "Show the relationship between irrigated area and crop yield in Uttar Pradesh",
+    "raw_sql": "```sql\nSELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';\n```",
+    "sql_clean": "SELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';",
+    "validation_error": "Referenced missing table(s): ['table_name']. Available: []"
+  },
+  {
+    "timestamp": "2025-10-29T15:01:24.777021",
+    "question": "/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/main.py",
+    "raw_sql": "```sql\nSELECT '/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/main.py' AS command;\n```",
+    "sql_clean": "SELECT '/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/main.py' AS command;",
+    "tables_used": [],
+    "row_count": 1,
+    "nl_answer": "The command to run the main.py file is '/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/main.py', as shown in the source table. This command is the only entry in the table, indicating it is the sole command of interest. The information is derived from the source table, which contains a single row with the specified command.",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-29T15:13:22.476956",
+    "question": "Show the relationship between irrigated area and crop yield in Uttar Pradesh",
+    "raw_sql": "```sql\nSELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';\n```",
+    "sql_clean": "SELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';",
+    "validation_error": "Referenced missing table(s): ['table_name']. Available: []"
+  },
+  {
+    "timestamp": "2025-10-29T15:18:41.471540",
+    "question": "Show the relationship between irrigated area and crop yield in Uttar Pradesh",
+    "raw_sql": "```sql\nSELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';\n```",
+    "sql_clean": "SELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';",
+    "validation_error": "Referenced missing table(s): ['table_name']. Available: []"
+  },
+  {
+    "timestamp": "2025-10-29T15:22:00.734152",
+    "question": "Show the relationship between irrigated area and crop yield in Uttar Pradesh",
+    "raw_sql": "```sql\nSELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';\n```",
+    "sql_clean": "SELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';",
+    "validation_error": "Referenced missing table(s): ['table_name']. Available: []"
+  },
+  {
+    "timestamp": "2025-10-29T15:22:17.857443",
+    "question": "Show the relationship between irrigated area and crop yield in Uttar Pradesh",
+    "error": "replace() argument 2 must be str, not None"
+  },
+  {
+    "timestamp": "2025-10-29T15:24:59.606830",
+    "question": "Show the relationship between irrigated area and crop yield in Uttar Pradesh",
+    "error": "replace() argument 2 must be str, not None"
+  },
+  {
+    "timestamp": "2025-10-29T15:25:00.691689",
+    "question": "",
+    "error": "Catalog Error: Table with name your_table does not exist!\nDid you mean \"pg_tables\"?\n\nLINE 1: SELECT * FROM your_table;\n                      ^"
+  },
+  {
+    "timestamp": "2025-10-29T15:29:54.155212",
+    "question": "/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/intelligent_qa_system_groq.py",
+    "error": "Catalog Error: Table with name intelligent_qa_system_groq does not exist!\nDid you mean \"sqlite_temp_master\"?\n\nLINE 1: SELECT * FROM intelligent_qa_system_groq;\n                      ^"
+  },
+  {
+    "timestamp": "2025-10-29T15:36:36.488361",
+    "question": "/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/main.py",
+    "raw_sql": "```sql\nSELECT '/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/main.py' AS command;\n```",
+    "sql_clean": "SELECT '/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/main.py' AS command;",
+    "tables_used": [],
+    "row_count": 1,
+    "nl_answer": "The command used is '/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/main.py', as shown in the source table. This information is based on the data from the table resulting from the SQL query. The source table contains only one row with this command.",
+    "error": null
+  },
+  {
+    "timestamp": "2025-10-29T15:44:04.866404",
+    "question": "Show the relationship between irrigated area and crop yield in Uttar Pradesh.",
+    "raw_sql": "```sql\nSELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';\n```",
+    "sql_clean": "SELECT irrigated_area, crop_yield \nFROM table_name \nWHERE state = 'Uttar Pradesh';",
+    "validation_error": "Referenced missing table(s): ['table_name']. Available: []"
+  },
+  {
+    "timestamp": "2025-10-29T15:47:43.467142",
+    "question": "/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/intelligent_qa_system_groq.py",
+    "raw_sql": "```sql\nSELECT '/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/intelligent_qa_system_groq.py' AS command;\n```",
+    "sql_clean": "SELECT '/opt/anaconda3/envs/New/bin/python /Users/manusd/Crop/backend/app/intelligent_qa_system_groq.py' AS command;",
+    "validation_error": "Referenced column 'app' not found in any table."
+  },
+  {
+    "timestamp": "2025-10-29T15:53:26.181913",
+    "question": "Show the relationship between irrigated area and crop yield in Uttar Pradesh.",
+    "raw_sql": "```sql\nSELECT \n    SUM(CASE WHEN season = 'Kharif' THEN area ELSE 0 END) AS irrigated_area,\n    AVG(yield) AS crop_yield\nFROM \n    crop_production_raw\nWHERE \n    state = 'Uttar Pradesh'\nGROUP BY \n    crop\nORDER BY \n    crop_yield DESC;\n```",
+    "sql_clean": "SELECT \n    SUM(CASE WHEN season = 'Kharif' THEN area ELSE 0 END) AS irrigated_area,\n    AVG(yield) AS crop_yield\nFROM \n    crop_production_raw\nWHERE \n    state = 'Uttar Pradesh'\nGROUP BY \n    crop\nORDER BY \n    crop_yield DESC;",
+    "tables_used": [
+      "crop_production_raw"
+    ],
+    "row_count": 39,
+    "nl_answer": "In Uttar Pradesh, the crop with the highest yield (55.64) has a significant irrigated area of approximately 34.6 million, as seen in the 'crop_production_raw' table. However, there is no clear direct relationship between irrigated area and crop yield, as some crops with zero irrigated area have relatively high yields. The data from 'crop_production_raw' suggests that other factors may be influencing crop yield in addition to irrigation.",
+    "error": null
+  }
+]

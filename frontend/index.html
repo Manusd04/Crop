@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriClimate Q&A 🌾</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>AgriClimate Intelligent Q&A</h1>
+    <p>Ask anything about crops, rainfall, groundwater, or temperature data.</p>
+
+    <textarea id="question" placeholder="e.g. Compare rice production between Punjab and West Bengal over the last 5 years..."></textarea>
+
+    <button id="askBtn">Ask Question</button>
+
+    <div id="output">
+      <h3>💬 Answer:</h3>
+      <p id="answer"></p>
+
+      <h3>🧩 SQL Query:</h3>
+      <pre id="sql"></pre>
+
+      <h3>📊 Table Preview:</h3>
+      <div id="table"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const API_URL = "http://127.0.0.1:8000/query"; // backend endpoint
+    
+    const chatBox = document.getElementById("chat-box");
+    const input = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+    
+    function appendMessage(sender, text) {
+      const msg = document.createElement("div");
+      msg.className = sender === "user" ? "message user" : "message bot";
+      msg.textContent = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+    async function sendQuestion() {
+      const question = input.value.trim();
+      if (!question) return;
+    
+      appendMessage("user", `🧠 ${question}`);
+      input.value = "";
+      appendMessage("bot", "⏳ Thinking...");
+    
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question })
+        });
+    
+        if (!response.ok) throw new Error("API request failed");
+        const data = await response.json();
+    
+        // remove "Thinking..." and show answer
+        chatBox.lastChild.remove();
+        appendMessage("bot", `🌾 ${data.answer || "No response received."}`);
+      } catch (err) {
+        chatBox.lastChild.remove();
+        appendMessage("bot", "⚠️ Error connecting to backend.");
+        console.error(err);
+      }
+    }
+    
+    sendBtn.addEventListener("click", sendQuestion);
+    input.addEventListener("keypress", e => {
+      if (e.key === "Enter") sendQuestion();
+    });
+    </script>
+    
+</body>
+</html>
