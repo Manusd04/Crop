@@ -9,7 +9,7 @@ services:
 
     envVars:
       - key: GROQ_API_KEY
-        sync: false  # you'll add this manually from the Render dashboard
+        sync: false  # add manually in Render dashboard
       - key: DB_PATH
         value: /opt/render/project/src/data/processed/agri_climate_db.duckdb
       - key: PYTHONPATH
