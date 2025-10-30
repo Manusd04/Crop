@@ -1,23 +1,46 @@
-# Environment variables
+# === Environment & Secrets ===
 .env
+*.key
+*.pem
 
-# Local databases
-*.duckdb
-*.db
+# === Databases & Large Data ===
+data/**/*.duckdb
+data/**/*.db
+data/**/*.csv
+data/**/*.txt
+!data/processed/header_summary.csv   # if you want to keep small metadata CSVs
+!data/processed/normalized_summary.txt
+backend/app/crop_data.db
 
-# Compiled Python files
+# === Python Cache / Compiled Files ===
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.pdb
 
-# macOS metadata
-.DS_Store
-
-# Logs
+# === Logs ===
 *.log
 backend/app/logs/
+logs/
 
-# Jupyter notebooks checkpoints (if any)
-.ipynb_checkpoints/
+# === OS & IDE Files ===
+.DS_Store
+.vscode/
+.idea/
+*.swp
 
-# Node modules (if frontend grows later)
+# === Render & Build Artifacts ===
+*.egg-info/
+dist/
+build/
+.envrc
+
+# === Frontend Build (if expanded later) ===
 frontend/node_modules/
+frontend/dist/
+
+# === Temporary or Test Files ===
+tmp/
+*.tmp
+test_*.py
